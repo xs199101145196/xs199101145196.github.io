@@ -8,17 +8,17 @@
   
     <meta name="keywords" content="XuSheng,XuSheng's Blog" />
   
-  <meta name="description" content="#传统构造函数存在的问题 ##1. 发现问题 现有构造函数如下： 1234567function Person(name, age)&amp;#123;    this.name = name;    this.age = age;    this.sayHi = function()&amp;#123;        console.log(&quot;你好&quot;);    &amp;#125;&amp;#125; 调用该构造函数创建对象，">
+  <meta name="description" content="传统构造函数存在的问题1. 发现问题现有构造函数如下： 1234567function Person(name, age)&amp;#123;    this.name = name;    this.age = age;    this.sayHi = function()&amp;#123;        console.log(&quot;你好&quot;);    &amp;#125;&amp;#125; 调用该构造函数创建对象，并对比创建">
 <meta property="og:type" content="article">
 <meta property="og:title" content="传统构造函数存在的问题">
 <meta property="og:url" content="http://yoursite.com/2017/09/16/传统构造函数存在的问题/index.html">
 <meta property="og:site_name" content="Xu Sheng&#39;Blog">
-<meta property="og:description" content="#传统构造函数存在的问题 ##1. 发现问题 现有构造函数如下： 1234567function Person(name, age)&amp;#123;    this.name = name;    this.age = age;    this.sayHi = function()&amp;#123;        console.log(&quot;你好&quot;);    &amp;#125;&amp;#125; 调用该构造函数创建对象，">
+<meta property="og:description" content="传统构造函数存在的问题1. 发现问题现有构造函数如下： 1234567function Person(name, age)&amp;#123;    this.name = name;    this.age = age;    this.sayHi = function()&amp;#123;        console.log(&quot;你好&quot;);    &amp;#125;&amp;#125; 调用该构造函数创建对象，并对比创建">
 <meta property="og:image" content="http://yoursite.com/2017/09/16/Images/03-3.png">
-<meta property="og:updated_time" content="2017-09-16T15:04:07.340Z">
+<meta property="og:updated_time" content="2017-09-25T14:03:14.205Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="传统构造函数存在的问题">
-<meta name="twitter:description" content="#传统构造函数存在的问题 ##1. 发现问题 现有构造函数如下： 1234567function Person(name, age)&amp;#123;    this.name = name;    this.age = age;    this.sayHi = function()&amp;#123;        console.log(&quot;你好&quot;);    &amp;#125;&amp;#125; 调用该构造函数创建对象，">
+<meta name="twitter:description" content="传统构造函数存在的问题1. 发现问题现有构造函数如下： 1234567function Person(name, age)&amp;#123;    this.name = name;    this.age = age;    this.sayHi = function()&amp;#123;        console.log(&quot;你好&quot;);    &amp;#125;&amp;#125; 调用该构造函数创建对象，并对比创建">
 <meta name="twitter:image" content="http://yoursite.com/2017/09/16/Images/03-3.png">
   
   
@@ -139,16 +139,13 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <p>#传统构造函数存在的问题</p>
-<p>##1. 发现问题</p>
-<p>现有构造函数如下：</p>
+            <h1 id="传统构造函数存在的问题"><a href="#传统构造函数存在的问题" class="headerlink" title="传统构造函数存在的问题"></a>传统构造函数存在的问题</h1><h2 id="1-发现问题"><a href="#1-发现问题" class="headerlink" title="1. 发现问题"></a>1. 发现问题</h2><p>现有构造函数如下：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.name = name;</div><div class="line">    <span class="keyword">this</span>.age = age;</div><div class="line">    <span class="keyword">this</span>.sayHi = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"你好"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>调用该构造函数创建对象，并对比创建出来的对象的<code>sayHi</code>方法：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> Person(<span class="string">"张三"</span>, <span class="number">18</span>);</div><div class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> Person(<span class="string">"李四"</span>, <span class="number">19</span>);</div><div class="line"><span class="built_in">console</span>.log(p.sayHi == p1.sayHi); <span class="comment">//输出结果为false</span></div></pre></td></tr></table></figure></p>
 <p>由于每个对象都是由<code>new Person</code>创建出来的，因此每创建一个对象，函数sayHi都会被重新创建一次，这个时候，每个对象都拥有一个独立的，但是<font color="red">功能完全相同</font>的方法。</p>
 <p><img src="../Images/03-3.png" alt=""></p>
 <p><strong>功能相同的函数，完全没有必要再内存中存在这么多份。所以就造成了资源浪费。</strong></p>
-<p>##2. 解决问题</p>
-<p>这里最好的办法就是将函数体放在构造函数之外. 在构造函数中只需要引用该函数即可。</p>
+<h2 id="2-解决问题"><a href="#2-解决问题" class="headerlink" title="2. 解决问题"></a>2. 解决问题</h2><p>这里最好的办法就是将函数体放在构造函数之外. 在构造函数中只需要引用该函数即可。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">sayHello</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"你好"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.name = name;</div><div class="line">    <span class="keyword">this</span>.age = age;</div><div class="line">    <span class="keyword">this</span>.sayHi = sayHello;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//调用该构造函数创建对象，并对比创建出来的对象的sayHi方法</span></div><div class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> Person(<span class="string">"张三"</span>, <span class="number">18</span>);</div><div class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> Person(<span class="string">"李四"</span>, <span class="number">19</span>);</div><div class="line"><span class="built_in">console</span>.log(p.sayHi == p1.sayHi); <span class="comment">//输出结果为true</span></div></pre></td></tr></table></figure>
 <p><strong><font color="red">这样写依然存在问题：</font></strong></p>
 <ul>
@@ -160,7 +157,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2017年09月16日 23:04</p>
+        <p>最后更新： 2017年09月25日 22:03</p>
         <p>原始链接： <a class="post-url" href="/2017/09/16/传统构造函数存在的问题/" title="传统构造函数存在的问题">http://yoursite.com/2017/09/16/传统构造函数存在的问题/</a></p>
         <footer>
             <a href="http://yoursite.com">
@@ -234,6 +231,12 @@
 </article>
 
 
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#传统构造函数存在的问题"><span class="post-toc-text">传统构造函数存在的问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-发现问题"><span class="post-toc-text">1. 发现问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-解决问题"><span class="post-toc-text">2. 解决问题</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
 
 <nav id="article-nav">
   
